@@ -252,7 +252,7 @@ saveWorkbook(wb, "data/mergeCellsExample.xlsx", overwrite = TRUE)
 # }
 ```
 
-# Practical Implications 
+# Ideas for production
 Okayy...this seems fun... just I can not possible find a "perfect" solution. 
 I guess there were two ways to experiment with: 
   a. use the neighboring values to determine if a 
@@ -269,6 +269,7 @@ To find CBT port value... just look around neighbor and `length()` not Blank. or
 Extracting FDPs links should be much easier??? As done `behead(. "right-up", "outgoing_fdp)` OMG this is OP!! 
 We just need a bit analytic around where to cut, it is li~terally just `filter()`
 
+My data looks like this:
 ```
 ___________________
 ENCLOSURE fdp
@@ -293,7 +294,7 @@ fdp|   |------------X----------------------------------------> | X |~ cbt
 ```
 If we consider spine node and edge all together is totally fun ~ we visualize things as it is... it is just going to have much-root. 
 
-## inspect formating differences among merged cells
+## Do merged cells have special formate? 
 `t()` and `flatten()` really helps a lot to identify which part of the code is different. 
 ```{r}
 fx %>% flatten() %>% data.frame -> ftb
@@ -308,5 +309,5 @@ ftb[1:nrow(ftb) %in% c(12, 13, 14, 25), ] %>%
   t() %>%
   data.frame()
 ```
-Nothing indicate that one formate dictate the cell is a merged area.
+So merged cells will share some same formate such as font, background color (exceptions are boarders)... however cells share teh same formate does not means they are mereged... make this unreliable way of identifying a mreged cell.
 
