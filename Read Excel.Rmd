@@ -1,7 +1,7 @@
 ---
 title: "How to Extract Fromate from Excel"
 author: "Dr.lumine"
-output: html_document
+output: html_notebook
 editor_options: 
   chunk_output_type: inline
 ---
@@ -18,8 +18,8 @@ The tutorial thanks to: <https://www.r-bloggers.com/2018/05/tidying-messy-excel-
 
 Introduce: 
 
-  - `r library(tidyxl)` 
-  - `r library(upivotr)`
+  - `library(tidyxl)` 
+  - `library(upivotr)`
 
 
 ##installation
@@ -34,7 +34,7 @@ library(tidyverse)
 ```
 
 ```{r echo=TRUE}
-cx <- list.files("data", ".xlsx", full.names = T) %>%
+cx <- list.files("data", "Excel", full.names = T) %>%
   xlsx_cells()
 cx.colors <- cx %>%
   dplyr::filter(sheet == "a.colors")
