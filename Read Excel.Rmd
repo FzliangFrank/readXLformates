@@ -8,8 +8,10 @@ editor_options:
 
 Set the working directory
 
-```{r}
-
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  fig.path = "README_figs/README-"
+)
 ```
 
 ## Acknowledgement
