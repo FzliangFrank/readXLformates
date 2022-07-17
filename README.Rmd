@@ -23,7 +23,7 @@ Introduce:
   - `library(tidyxl)` 
   - `library(upivotr)`
 
-##installation
+## installation
 
 ```{r echo=T}
 setwd("~/Dropbox/Projects/Learning - R general/01 - Read Excel")
@@ -114,8 +114,7 @@ cx.d |>
 cx.d |>
   rectify(value = local_format_id)
 fx <- paste0(getwd(), "/data/Colored Excel.xlsx") |>
-  xlsx_formats() 
-fx
+  xlsx_formats()
 ```
 Just saying that even though the merged cells looks as if there were nothing but still underneath is formatting. 
 
@@ -208,7 +207,7 @@ wb<- list.files("data", "Colored", full.names = T) |>
 
 getStyles(wb) |> class()
 wbStyle <- getStyles(wb)
-wbStyle |> map(names)
+#wbStyle |> map(names)
 wbStyle |> length()
 wbStyle |> depth()
 ```
