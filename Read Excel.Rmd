@@ -308,5 +308,5 @@ ftb[1:nrow(ftb) %in% c(12, 13, 14, 25), ] %>%
   t() %>%
   data.frame()
 ```
-
+Nothing indicate that one formate dictate the cell is a merged area. 
 
