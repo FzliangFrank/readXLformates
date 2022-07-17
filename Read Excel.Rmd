@@ -1,12 +1,12 @@
 ---
 title: "How to Extract Fromate from Excel"
 author: "Dr.lumine"
-output: rmarkdown::github_document
+output: 
+  html_document:
+    keep_md: true
 editor_options: 
   chunk_output_type: inline
 ---
-
-Set the working directory
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
@@ -22,7 +22,6 @@ Introduce:
 
   - `library(tidyxl)` 
   - `library(upivotr)`
-
 
 ##installation
 
