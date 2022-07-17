@@ -25,24 +25,26 @@ Introduce:
 
 ##installation
 
-```{r}
+```{r echo=T}
 setwd("~/Dropbox/Projects/Learning - R general/01 - Read Excel")
 #devtools::install_github('nacnudus/unpivotr')
 library(tidyxl)
 library(unpivotr)
-
 library(tidyverse)
 ```
 
+```{r}
+list.files("data", "Excel", full.names = T)
+.libPaths()
+```
+
+
 ```{r echo=TRUE}
-cx <- list.files("data", "Excel", full.names = T) %>%
-  xlsx_cells()
-cx.colors <- cx %>%
+cx <- paste0(getwd(), "/data/Colored Excel.xlsx") |> xlsx_cells()
+cx.colors <- cx |>
   dplyr::filter(sheet == "a.colors")
 
 names(cx.colors)
-print("sheet names:")
-list.files("data", ".xlsx", full.names = T) %>% xlsx_sheet_names()
 ```
 
 
@@ -57,38 +59,37 @@ So two things dictating the formate of a cx object `syle_format` and `local_form
 ### Background Color
 Strangely background color is stored in `fgColor$rgb` not anywhere else
 ```{r}
-fx <- list.files("data", ".xlsx", full.names = T) %>%
-  xlsx_formats()
+fx <- paste0(getwd(), "/data/Colored Excel.xlsx") |> xlsx_formats()
 ```
 The best way to do this is to through a function
 ```{r}
 id_to_format <- function(x){
   fx$local$fill$patternFill$fgColor$rgb[x]
 }
-cx.colors %>%
-  behead("up", "headler", character) %>%
-  mutate(color = id_to_format(local_format_id)) %>%
+cx.colors |>
+  behead("up", "headler", character) |>
+  mutate(color = id_to_format(local_format_id)) |>
   pivot_wider(id_cols = c(row),names_from = "headler", values_from = "color")
 ```
 
 ### deal with tables floating out of nowhere
 ```{r}
 cx.b <- filter(cx, sheet == "b.floating tables")
-cx.b %>% 
+cx.b |> 
   rectify()
-cx.b %>%
-  behead("up", "header", character) %>%
+cx.b |>
+  behead("up", "header", character) |>
   distinct(header)
 ```
 ### Merged
 ```{r}
 cx.c <- dplyr::filter(cx, sheet == "c.floating merged cells")
-cx.c %>%
-  rectify
-cx.c %>%
-  behead("left-up", "merged", character) %>%
-  unpivotr::pack() %>% # pack second so you can creat headlers
-  select(row, merged, value) %>%
+cx.c |>
+  rectify()
+cx.c |>
+  behead("left-up", "merged", character) |>
+  unpivotr::pack() |> # pack second so you can creat headlers
+  select(row, merged, value) |>
   unpivotr::unpack(value) # unpack later so you can use that
 ```
 - row 19-20 is gone 
@@ -103,16 +104,16 @@ The answer is yes try place a value in excel, merge outside, unmerge it again,
 the location turn.
 
 ```{r}
-cx.d <- cx %>% filter(sheet == "d.paralle merged cells")
+cx.d <- cx |> filter(sheet == "d.paralle merged cells")
 
 ## Value layer
-cx.d %>%
-  unpivotr::pack() %>% 
+cx.d |>
+  unpivotr::pack() |> 
   rectify(value = value)
 ## Formating layer
-cx.d %>%
+cx.d |>
   rectify(value = local_format_id)
-fx <- list.files("data", ".xlsx", full.names = T) %>%
+fx <- paste0(getwd(), "/data/Colored Excel.xlsx") |>
   xlsx_formats() 
 fx
 ```
@@ -126,8 +127,8 @@ Boarder is identified formate
 ### Explore formate list 
 ```{r}
 #install.packages("data.tree")
-library("data.tree")
-fx %>% map(names)
+#library("data.tree")
+fx |> map(names)
 fx$local$border
 
 fx$local$border$right$color$rgb
@@ -137,7 +138,7 @@ fx$local$border$bottom$color$rgb
 
 ```
 
-```{r}
+```{r include = F, echo=F}
 library(networkD3)
 URL <- paste0(
         "https://cdn.rawgit.com/christophergandrud/networkD3/",
@@ -171,31 +172,19 @@ toTree <- function(x) {
     children = lapply(names(x), function(nm) list(name=nm))
   }
 }
-dt <- FromListSimple(toTree(x), nodeName = "x")
-plot(dt)
+
 ```
 
 ```{r message=FALSE, warning=FALSE, include=FALSE}
-pluck(fx, 1) %>% names()
+
+pluck(fx, 1) |> names()
 depth(fx)
 vec_depth(fx)
 pluck(fx, 2)
 length(fx)
 
-fx %>% unlist() %>% length()
+fx |> unlist() |> length()
 
-get_list <- function(x){
-        while(is.list(x)){
-          for(i in 1:length(x)){
-            xi <- pluck(x, i)
-          }
-        }
-        xi
-}
-fx %>% unlist() %>% names() %>% str_remove_all("[0-9]+") %>%
-  unique() %>%
-  data.frame() %>%
-  filter(grepl("area",`.`))
 ```
 
 ```{r}
@@ -211,14 +200,17 @@ test_reg("(?<=\\.)\\w+\\.\\w+(?=\\.)")
 ```
 # Give in to `openxl`
 ```{r}
-wb<- list.files("data", ".xlsx", full.names = T) %>%
+#install.packages("openxlsx")
+library(openxlsx)
+
+wb<- list.files("data", "Colored", full.names = T) |>
   loadWorkbook()
 
-getStyles(wb) %>% class()
+getStyles(wb) |> class()
 wbStyle <- getStyles(wb)
-wbStyle %>% map(names)
-wbStyle %>% length
-wbStyle %>% depth()
+wbStyle |> map(names)
+wbStyle |> length()
+wbStyle |> depth()
 ```
 
 ```{r}
@@ -298,16 +290,16 @@ If we consider spine node and edge all together is totally fun ~ we visualize th
 ## Do merged cells have special formate? 
 `t()` and `flatten()` really helps a lot to identify which part of the code is different. 
 ```{r}
-fx %>% flatten() %>% data.frame -> ftb
+fx |> flatten() |> data.frame() -> ftb
 
-  cx.c %>% rectify(value = local_format_id)
-cx.d %>% rectify(value = local_format_id)
+  cx.c |> rectify(value = local_format_id)
+cx.d |> rectify(value = local_format_id)
 
 
 c(12, 13, 14) %in% 1:nrow(ftb)
 
-ftb[1:nrow(ftb) %in% c(12, 13, 14, 25), ] %>% 
-  t() %>%
+ftb[1:nrow(ftb) %in% c(12, 13, 14, 25), ] |> 
+  t() |>
   data.frame()
 ```
 So merged cells will share some same formate such as font, background color (exceptions are boarders)... however cells share teh same formate does not means they are mereged... make this unreliable way of identifying a mreged cell.
