@@ -9,11 +9,6 @@ editor_options:
 ---
 
 
-```r
-knitr::opts_chunk$set(
-  fig.path = "README_figs/README-"
-)
-```
 
 ## Acknowledgement
 
@@ -1545,8 +1540,8 @@ test_reg("(?<=\\.)\\w+")
 ```
 
 ```{=html}
-<div id="htmlwidget-0ec99fa486ca08351fcc" style="width:960px;height:100%;" class="str_view html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0ec99fa486ca08351fcc">{"x":{"html":"<ul>\n  <li>style.<span class='match'>border<\/span>.<span class='match'>diagonal<\/span>.<span class='match'>color<\/span>.<span class='match'>theme<\/span>.<span class='match'>Normal<\/span>\n    local.<span class='match'>font<\/span>.<span class='match'>strike<\/span>\n    local.<span class='match'>font<\/span>.<span class='match'>color<\/span>.<span class='match'>indexed<\/span><\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-c0dfaf7204a304faf258" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c0dfaf7204a304faf258">{"x":{"html":"<ul>\n  <li>style.<span class='match'>border<\/span>.<span class='match'>diagonal<\/span>.<span class='match'>color<\/span>.<span class='match'>theme<\/span>.<span class='match'>Normal<\/span>\n    local.<span class='match'>font<\/span>.<span class='match'>strike<\/span>\n    local.<span class='match'>font<\/span>.<span class='match'>color<\/span>.<span class='match'>indexed<\/span><\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
 ```
 
 ```r
@@ -1554,8 +1549,8 @@ test_reg("\\w+\\.\\w+")
 ```
 
 ```{=html}
-<div id="htmlwidget-22ef917ee3a4dac9bf4b" style="width:960px;height:100%;" class="str_view html-widget"></div>
-<script type="application/json" data-for="htmlwidget-22ef917ee3a4dac9bf4b">{"x":{"html":"<ul>\n  <li><span class='match'>style.border<\/span>.<span class='match'>diagonal.color<\/span>.<span class='match'>theme.Normal<\/span>\n    <span class='match'>local.font<\/span>.strike\n    <span class='match'>local.font<\/span>.<span class='match'>color.indexed<\/span><\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-0880812b6118ff423b2c" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0880812b6118ff423b2c">{"x":{"html":"<ul>\n  <li><span class='match'>style.border<\/span>.<span class='match'>diagonal.color<\/span>.<span class='match'>theme.Normal<\/span>\n    <span class='match'>local.font<\/span>.strike\n    <span class='match'>local.font<\/span>.<span class='match'>color.indexed<\/span><\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
 ```
 
 ```r
@@ -1563,8 +1558,8 @@ test_reg("(?<=\\.)\\w+\\.\\w+(?=\\.)")
 ```
 
 ```{=html}
-<div id="htmlwidget-8ead7a96f5e296f8a6ef" style="width:960px;height:100%;" class="str_view html-widget"></div>
-<script type="application/json" data-for="htmlwidget-8ead7a96f5e296f8a6ef">{"x":{"html":"<ul>\n  <li>style.<span class='match'>border.diagonal<\/span>.<span class='match'>color.theme<\/span>.Normal\n    local.font.strike\n    local.<span class='match'>font.color<\/span>.indexed<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-c06f0b55909fe283b1de" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c06f0b55909fe283b1de">{"x":{"html":"<ul>\n  <li>style.<span class='match'>border.diagonal<\/span>.<span class='match'>color.theme<\/span>.Normal\n    local.font.strike\n    local.<span class='match'>font.color<\/span>.indexed<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
 ```
 # Give in to `openxl`
 
