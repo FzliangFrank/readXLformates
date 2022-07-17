@@ -1,0 +1,312 @@
+---
+title: "How to Extract Fromate from Excel"
+author: "Dr.lumine"
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+Set the working directory
+
+```{r}
+
+```
+
+## Acknowledgement
+
+The tutorial thanks to: <https://www.r-bloggers.com/2018/05/tidying-messy-excel-data-tidyxl/>
+
+Introduce: 
+
+  - `r library(tidyxl)` 
+  - `r library(upivotr)`
+
+
+##installation
+
+```{r}
+setwd("~/Dropbox/Projects/Learning - R general/01 - Read Excel")
+#devtools::install_github('nacnudus/unpivotr')
+library(tidyxl)
+library(unpivotr)
+
+library(tidyverse)
+```
+
+```{r echo=TRUE}
+cx <- list.files("data", ".xlsx", full.names = T) %>%
+  xlsx_cells()
+cx.colors <- cx %>%
+  dplyr::filter(sheet == "a.colors")
+
+names(cx.colors)
+print("sheet names:")
+list.files("data", ".xlsx", full.names = T) %>% xlsx_sheet_names()
+```
+
+
+## Formating
+```{r}
+cx.colors$local_format_id
+```
+So two things dictating the formate of a cx object `syle_format` and `local_format_id`, the later is an id that stores the style imformation. Later will show you how this is extracted in a completely different file
+
+> To look up the local formatting of a given cell, take the cell's `local_format_id` value `(my_cells$Sheet1[1, "local_format_id"])`, and use it as an index into the format structure. E.g. to look up the font size, `my_formats$local$font$size[local_format_id]`. To see all available formats, type str(my_formats$local).
+
+### Background Color
+Strangely background color is stored in `fgColor$rgb` not anywhere else
+```{r}
+fx <- list.files("data", ".xlsx", full.names = T) %>%
+  xlsx_formats()
+```
+The best way to do this is to through a function
+```{r}
+id_to_format <- function(x){
+  fx$local$fill$patternFill$fgColor$rgb[x]
+}
+cx.colors %>%
+  behead("up", "headler", character) %>%
+  mutate(color = id_to_format(local_format_id)) %>%
+  pivot_wider(id_cols = c(row),names_from = "headler", values_from = "color")
+```
+
+### deal with tables floating out of nowhere
+```{r}
+cx.b <- filter(cx, sheet == "b.floating tables")
+cx.b %>% 
+  rectify()
+cx.b %>%
+  behead("up", "header", character) %>%
+  distinct(header)
+```
+### Merged
+```{r}
+cx.c <- dplyr::filter(cx, sheet == "c.floating merged cells")
+cx.c %>%
+  rectify
+cx.c %>%
+  behead("left-up", "merged", character) %>%
+  unpivotr::pack() %>% # pack second so you can creat headlers
+  select(row, merged, value) %>%
+  unpivotr::unpack(value) # unpack later so you can use that
+```
+- row 19-20 is gone 
+- it is gone when you `behead` everything
+- the title we created from "up-left" because it has always been an up left, made sure everything is beheaded.
+
+So in short it would be impossible to umerge cells if there is no other value besides it.
+
+> Do a merged cell always have value placed on top left? 
+
+The answer is yes try place a value in excel, merge outside, unmerge it again, 
+the location turn.
+
+```{r}
+cx.d <- cx %>% filter(sheet == "d.paralle merged cells")
+
+## Value layer
+cx.d %>%
+  unpivotr::pack() %>% 
+  rectify(value = value)
+## Formating layer
+cx.d %>%
+  rectify(value = local_format_id)
+fx <- list.files("data", ".xlsx", full.names = T) %>%
+  xlsx_formats() 
+fx
+```
+Just saying that even though the merged cells looks as if there were nothing but still underneath is formatting. 
+
+It is not because it can recognise merged cells, but because your merged cells has borders..... 
+
+Boarder is identified formate
+
+# Update: use data tree to visualise which data
+### Explore formate list 
+```{r}
+#install.packages("data.tree")
+library("data.tree")
+fx %>% map(names)
+fx$local$border
+
+fx$local$border$right$color$rgb
+fx$local$border$top$color$rgb
+fx$local$border$left$color$rgb
+fx$local$border$bottom$color$rgb
+
+```
+
+```{r}
+library(networkD3)
+URL <- paste0(
+        "https://cdn.rawgit.com/christophergandrud/networkD3/",
+        "master/JSONdata//flare.json")
+
+## Convert to list format
+Flare <- jsonlite::fromJSON(URL, simplifyDataFrame = FALSE)
+
+# Use subset of data for more readable diagram
+Flare$children = Flare$children[1:3]
+
+diagonalNetwork(List = Flare, fontSize = 10, opacity = 0.9)
+```
+## How to Visualise a Nested List? 
+[stack Visualise object as tree](https://stackoverflow.com/questions/51608378/visualise-object-in-r-as-tree)
+
+```{r}
+x <- list(
+  id = 1,
+  status = "active",
+  coord = list(phi=0, theta=1, r=1),
+  mt = NULL
+)
+depth <- function(x) ifelse(is.list(x), 1 + max(sapply(x, depth)), 0)
+
+toTree <- function(x) {
+  d <- depth(x)
+  if(d > 1) {
+    lapply(x, toTree)
+  } else {
+    children = lapply(names(x), function(nm) list(name=nm))
+  }
+}
+dt <- FromListSimple(toTree(x), nodeName = "x")
+plot(dt)
+```
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+pluck(fx, 1) %>% names()
+depth(fx)
+vec_depth(fx)
+pluck(fx, 2)
+length(fx)
+
+fx %>% unlist() %>% length()
+
+get_list <- function(x){
+        while(is.list(x)){
+          for(i in 1:length(x)){
+            xi <- pluck(x, i)
+          }
+        }
+        xi
+}
+fx %>% unlist() %>% names() %>% str_remove_all("[0-9]+") %>%
+  unique() %>%
+  data.frame() %>%
+  filter(grepl("area",`.`))
+```
+
+```{r}
+test_reg <- function(re){
+  str_view_all(
+    "style.border.diagonal.color.theme.Normal
+    local.font.strike
+    local.font.color.indexed", re)
+}
+test_reg("(?<=\\.)\\w+")
+test_reg("\\w+\\.\\w+")
+test_reg("(?<=\\.)\\w+\\.\\w+(?=\\.)")
+```
+# Give in to `openxl`
+```{r}
+wb<- list.files("data", ".xlsx", full.names = T) %>%
+  loadWorkbook()
+
+getStyles(wb) %>% class()
+wbStyle <- getStyles(wb)
+wbStyle %>% map(names)
+wbStyle %>% length
+wbStyle %>% depth()
+```
+
+```{r}
+# NOT RUN {
+## Create a new workbook
+wb <- createWorkbook()
+
+## Add a worksheet
+addWorksheet(wb, "Sheet 1")
+addWorksheet(wb, "Sheet 2")
+
+## Merge cells: Row 2 column C to F (3:6)
+mergeCells(wb, "Sheet 1", cols = 2, rows = 3:6)
+
+## Merge cells:Rows 10 to 20 columns A to J (1:10)
+mergeCells(wb, 1, cols = 1:10, rows = 10:20)
+
+## Intersecting merges
+mergeCells(wb, 2, cols = 1:10, rows = 1)
+mergeCells(wb, 2, cols = 5:10, rows = 2)
+mergeCells(wb, 2, cols = c(1, 10), rows = 12) ## equivalent to 1:10 as only min/max are used
+# mergeCells(wb, 2, cols = 1, rows = c(1,10)) # Throws error because intersects existing merge
+
+## remove merged cells
+removeCellMerge(wb, 2, cols = 1, rows = 1) # removes any intersecting merges
+mergeCells(wb, 2, cols = 1, rows = 1:10) # Now this works
+
+## Save workbook
+# }
+# NOT RUN {
+saveWorkbook(wb, "data/mergeCellsExample.xlsx", overwrite = TRUE)
+# }
+```
+
+# Practical Implications 
+Okayy...this seems fun... just I can not possible find a "perfect" solution. 
+I guess there were two ways to experiment with: 
+  a. use the neighboring values to determine if a 
+  b. format 
+    b.a general format
+    b.b boarder forma - which is most likely to be unreliable. 
+  
+A little CBT extraction idea: 
+find where splitter is, then find row, in the same row, find maximum column that are not NULL. Then you locate where our CBT is!!
+
+To find CBT port value... just look around neighbor and `length()` not Blank. or literally just `col - 1`
+
+
+Extracting FDPs links should be much easier??? As done `behead(. "right-up", "outgoing_fdp)` OMG this is OP!! 
+We just need a bit analytic around where to cut, it is li~terally just `filter()`
+
+```
+___________________
+ENCLOSURE fdp
+-------------------
+Subs       |   |  |
+xxxx       |   |  |
+-------------------
+(a lot  
+    of 
+blank space)
+--------
+fdp|   |------------X----------------------------------------> | X |~ cbt
+   |   |------------X------------------------> | X |~ cbt      |   |
+   |   |------c------> |fdp|   | #             |   |           |   |~ cbt 
+   |   |------c------> |   |   | #             |   |.          |   |
+   |   |.                                      |   |.
+   |   |.
+   |   |.
+   |   |.
+   |   |.
+--------
+```
+If we consider spine node and edge all together is totally fun ~ we visualize things as it is... it is just going to have much-root. 
+
+## inspect formating differences among merged cells
+`t()` and `flatten()` really helps a lot to identify which part of the code is different. 
+```{r}
+fx %>% flatten() %>% data.frame -> ftb
+
+  cx.c %>% rectify(value = local_format_id)
+cx.d %>% rectify(value = local_format_id)
+
+
+c(12, 13, 14) %in% 1:nrow(ftb)
+
+ftb[1:nrow(ftb) %in% c(12, 13, 14, 25), ] %>% 
+  t() %>%
+  data.frame()
+```
+
+
