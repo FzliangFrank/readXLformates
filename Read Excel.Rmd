@@ -1,7 +1,7 @@
 ---
 title: "How to Extract Fromate from Excel"
 author: "Dr.lumine"
-output: html_notebook
+output: rmarkdown::github_document
 editor_options: 
   chunk_output_type: inline
 ---
