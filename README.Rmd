@@ -1,5 +1,5 @@
 ---
-title: "How to Extract Fromate from Excel"
+title: "How to read formate out of Excel?"
 author: "Dr.lumine"
 output: 
   html_document:

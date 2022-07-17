@@ -1,5 +1,5 @@
 ---
-title: "How to Extract Fromate from Excel"
+title: "How to read formate out of Excel?"
 author: "Dr.lumine"
 output: 
   html_document:
@@ -1545,8 +1545,8 @@ test_reg("(?<=\\.)\\w+")
 ```
 
 ```{=html}
-<div id="htmlwidget-8734e511651199df56dd" style="width:960px;height:100%;" class="str_view html-widget"></div>
-<script type="application/json" data-for="htmlwidget-8734e511651199df56dd">{"x":{"html":"<ul>\n  <li>style.<span class='match'>border<\/span>.<span class='match'>diagonal<\/span>.<span class='match'>color<\/span>.<span class='match'>theme<\/span>.<span class='match'>Normal<\/span>\n    local.<span class='match'>font<\/span>.<span class='match'>strike<\/span>\n    local.<span class='match'>font<\/span>.<span class='match'>color<\/span>.<span class='match'>indexed<\/span><\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-0ec99fa486ca08351fcc" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0ec99fa486ca08351fcc">{"x":{"html":"<ul>\n  <li>style.<span class='match'>border<\/span>.<span class='match'>diagonal<\/span>.<span class='match'>color<\/span>.<span class='match'>theme<\/span>.<span class='match'>Normal<\/span>\n    local.<span class='match'>font<\/span>.<span class='match'>strike<\/span>\n    local.<span class='match'>font<\/span>.<span class='match'>color<\/span>.<span class='match'>indexed<\/span><\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
 ```
 
 ```r
@@ -1554,8 +1554,8 @@ test_reg("\\w+\\.\\w+")
 ```
 
 ```{=html}
-<div id="htmlwidget-4f93f712a90c0eeb36b5" style="width:960px;height:100%;" class="str_view html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4f93f712a90c0eeb36b5">{"x":{"html":"<ul>\n  <li><span class='match'>style.border<\/span>.<span class='match'>diagonal.color<\/span>.<span class='match'>theme.Normal<\/span>\n    <span class='match'>local.font<\/span>.strike\n    <span class='match'>local.font<\/span>.<span class='match'>color.indexed<\/span><\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-22ef917ee3a4dac9bf4b" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-22ef917ee3a4dac9bf4b">{"x":{"html":"<ul>\n  <li><span class='match'>style.border<\/span>.<span class='match'>diagonal.color<\/span>.<span class='match'>theme.Normal<\/span>\n    <span class='match'>local.font<\/span>.strike\n    <span class='match'>local.font<\/span>.<span class='match'>color.indexed<\/span><\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
 ```
 
 ```r
@@ -1563,8 +1563,8 @@ test_reg("(?<=\\.)\\w+\\.\\w+(?=\\.)")
 ```
 
 ```{=html}
-<div id="htmlwidget-68c0c480fe675f18de60" style="width:960px;height:100%;" class="str_view html-widget"></div>
-<script type="application/json" data-for="htmlwidget-68c0c480fe675f18de60">{"x":{"html":"<ul>\n  <li>style.<span class='match'>border.diagonal<\/span>.<span class='match'>color.theme<\/span>.Normal\n    local.font.strike\n    local.<span class='match'>font.color<\/span>.indexed<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-8ead7a96f5e296f8a6ef" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8ead7a96f5e296f8a6ef">{"x":{"html":"<ul>\n  <li>style.<span class='match'>border.diagonal<\/span>.<span class='match'>color.theme<\/span>.Normal\n    local.font.strike\n    local.<span class='match'>font.color<\/span>.indexed<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
 ```
 # Give in to `openxl`
 
